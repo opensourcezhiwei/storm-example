@@ -1,0 +1,64 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.ds</groupId>
+	<artifactId>storm-test</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+
+	<!-- 配置项目属性 -->
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>1.7</java.version>
+		<storm.version>0.10.0</storm.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.storm</groupId>
+			<artifactId>storm-core</artifactId>
+			<version>${storm.version}</version>
+		</dependency>
+	</dependencies>
+
+	<!-- mvn clean deploy -P release -Dgpg.passphrase= -->
+	<profiles>
+		<profile>
+			<id>release</id>
+			<build>
+				<!-- <resources> <resource> <directory>src/main/resources</directory> 
+					<excludes> <exclude>*.properties</exclude> <exclude>*.xml</exclude> </excludes> 
+					<filtering>false</filtering> </resource> </resources> -->
+
+				<plugins>
+					<plugin>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<configuration>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+							<archive>
+								<manifest>
+									<mainClass>com.ds.storm.sentence.WordCountTopology</mainClass>
+								</manifest>
+							</archive>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+			<distributionManagement>
+				<!-- 两个ID必须与 setting.xml中的<server><id>nexus-releases</id></server>保持一致 -->
+				<repository>
+					<id>nexus-releases</id>
+					<name>Nexus Release Repository</name>
+					<url>http://192.168.1.44:8081/nexus/content/repositories/releases</url>
+				</repository>
+				<snapshotRepository>
+					<id>nexus-snapshots</id>
+					<name>Nexus Snapshot Repository</name>
+					<url>http://192.168.1.44:8081/nexus/content/repositories/snapshots</url>
+				</snapshotRepository>
+			</distributionManagement>
+		</profile>
+	</profiles>
+
+</project>
